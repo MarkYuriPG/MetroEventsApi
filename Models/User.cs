@@ -10,7 +10,6 @@ public partial class User
     public string Password { get; set; } = null!;
     public UserRole Role { get; set; } = UserRole.Regular;
     public UserStatus Status { get; set; } = UserStatus.Offline;
-
 }
 
 public enum UserRole

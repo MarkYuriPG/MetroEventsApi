@@ -3,6 +3,7 @@ using MetroEventsApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetroEventsApi.Migrations
 {
     [DbContext(typeof(MetroEventsDbContext))]
-    partial class MetroEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240326084942_remove-userevent-prop-in-user-and-event")]
+    partial class removeusereventpropinuserandevent
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

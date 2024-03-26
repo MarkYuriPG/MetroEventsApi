@@ -3,6 +3,7 @@ using MetroEventsApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetroEventsApi.Migrations
 {
     [DbContext(typeof(MetroEventsDbContext))]
-    partial class MetroEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240326020501_Add-manytomany-events-users")]
+    partial class Addmanytomanyeventsusers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,7 +87,7 @@ namespace MetroEventsApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MetroEventsApi.Models.UserEvent", b =>
+            modelBuilder.Entity("MetroEventsApi.Models.UserEvents", b =>
                 {
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -94,7 +97,38 @@ namespace MetroEventsApi.Migrations
 
                     b.HasKey("UserId", "EventId");
 
+                    b.HasIndex("EventId");
+
                     b.ToTable("UserEvents");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.UserEvents", b =>
+                {
+                    b.HasOne("MetroEventsApi.Models.Event", "Event")
+                        .WithMany("UserEvents")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MetroEventsApi.Models.User", "User")
+                        .WithMany("UserEvents")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.Event", b =>
+                {
+                    b.Navigation("UserEvents");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.User", b =>
+                {
+                    b.Navigation("UserEvents");
                 });
 #pragma warning restore 612, 618
         }

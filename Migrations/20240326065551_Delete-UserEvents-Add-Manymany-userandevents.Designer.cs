@@ -3,6 +3,7 @@ using MetroEventsApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetroEventsApi.Migrations
 {
     [DbContext(typeof(MetroEventsDbContext))]
-    partial class MetroEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240326065551_Delete-UserEvents-Add-Manymany-userandevents")]
+    partial class DeleteUserEventsAddManymanyuserandevents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,6 +23,21 @@ namespace MetroEventsApi.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("EventUser", b =>
+                {
+                    b.Property<int>("EventsEventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersUserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EventsEventId", "UsersUserId");
+
+                    b.HasIndex("UsersUserId");
+
+                    b.ToTable("EventUser");
+                });
 
             modelBuilder.Entity("MetroEventsApi.Models.Event", b =>
                 {
@@ -84,17 +102,19 @@ namespace MetroEventsApi.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("MetroEventsApi.Models.UserEvent", b =>
+            modelBuilder.Entity("EventUser", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.HasOne("MetroEventsApi.Models.Event", null)
+                        .WithMany()
+                        .HasForeignKey("EventsEventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("EventId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "EventId");
-
-                    b.ToTable("UserEvents");
+                    b.HasOne("MetroEventsApi.Models.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

@@ -3,6 +3,7 @@ using MetroEventsApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetroEventsApi.Migrations
 {
     [DbContext(typeof(MetroEventsDbContext))]
-    partial class MetroEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240326083059_Remove-user-and-event-int-userevents")]
+    partial class Removeuserandeventintuserevents
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -94,7 +97,34 @@ namespace MetroEventsApi.Migrations
 
                     b.HasKey("UserId", "EventId");
 
+                    b.HasIndex("EventId");
+
                     b.ToTable("UserEvents");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.UserEvent", b =>
+                {
+                    b.HasOne("MetroEventsApi.Models.Event", null)
+                        .WithMany("EventUsers")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MetroEventsApi.Models.User", null)
+                        .WithMany("UserEvents")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.Event", b =>
+                {
+                    b.Navigation("EventUsers");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.User", b =>
+                {
+                    b.Navigation("UserEvents");
                 });
 #pragma warning restore 612, 618
         }

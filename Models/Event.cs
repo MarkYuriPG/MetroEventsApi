@@ -18,4 +18,5 @@ public partial class Event
     public string Date { get; set; }
     [Required]
     public string Location { get; set; } = string.Empty;
+    public int Likes { get; set; } = 0;
 }

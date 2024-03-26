@@ -3,7 +3,9 @@ using MetroEventsApi.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Protocol.Core.Types;
 using System.Drawing;
+using System.Security.Claims;
 
 namespace MetroEventsApi.Controllers
 {
@@ -18,7 +20,7 @@ namespace MetroEventsApi.Controllers
             _context = context;
         }
 
-        [HttpGet("Get")]
+        [HttpGet(Name = "GetAllEvents")]
         public IActionResult GetAll()
         {
             var events = _context.Events.ToList();
@@ -31,7 +33,7 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet("{id}", Name ="GetEventbyId")]
         public IActionResult Get(int id)
         {
             var targetEvent = _context.Events
@@ -49,7 +51,7 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        [HttpPost("Create")]
+        [HttpPost(Name ="CreateEvent")]
         [EnableCors("AllowReactApp")]
         public IActionResult Create([FromBody] Event eventt)
         {
@@ -69,7 +71,7 @@ namespace MetroEventsApi.Controllers
             return Ok(eventt);
         }
 
-        [HttpPut("Update")]
+        [HttpPut(Name ="UpdateEvent")]
         [EnableCors("AllowReactApp")]
         public IActionResult Update([FromBody] Event eventt)
         {
@@ -93,12 +95,13 @@ namespace MetroEventsApi.Controllers
                 targetEvent.Date = eventt.Date;
                 targetEvent.Organizer = eventt.Organizer;
                 targetEvent.Location = eventt.Location;
+                targetEvent.Likes = eventt.Likes;
                 _context.SaveChanges();
                 return Ok(targetEvent);
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}", Name ="DeleteEvent")]
         [EnableCors("AllowReactApp")]
         public IActionResult Delete(int id)
         {
