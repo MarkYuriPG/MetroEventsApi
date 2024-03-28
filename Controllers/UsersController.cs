@@ -137,7 +137,7 @@ namespace MetroEventsApi.Controllers
 
             // You can return additional information about the user if needed
             // For simplicity, returning only the user ID here
-            return Ok(new { UserId = user.UserId });
+            return Ok(new { UserId = user.UserId,  UserRole = user.Role });
         }
     }
 }

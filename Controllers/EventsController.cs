@@ -96,6 +96,7 @@ namespace MetroEventsApi.Controllers
                 targetEvent.Organizer = eventt.Organizer;
                 targetEvent.Location = eventt.Location;
                 targetEvent.Likes = eventt.Likes;
+                targetEvent.Approval = eventt.Approval;
                 _context.SaveChanges();
                 return Ok(targetEvent);
             }
