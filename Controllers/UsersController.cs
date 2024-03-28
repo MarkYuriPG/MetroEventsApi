@@ -22,7 +22,7 @@ namespace MetroEventsApi.Controllers
             _context = context;
         }
 
-        [HttpGet("Get")]
+        [HttpGet(Name = "GetAllUsers")]
         public IActionResult GetAll()
         {
             var users = _context.Users.ToList();
@@ -36,7 +36,7 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        [HttpGet("Get/{id}")]
+        [HttpGet("{id}", Name = "GetUserById")]
         public IActionResult Get(int id)
         {
             var targetUser = _context.Users
@@ -54,7 +54,7 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        [HttpPost("Create")]
+        [HttpPost(Name = "CreateUser")]
         [EnableCors("AllowReactApp")]
         public IActionResult Create([FromBody] User user)
         {
@@ -74,7 +74,7 @@ namespace MetroEventsApi.Controllers
             return Ok(user);
         }
 
-        [HttpPut("Update")]
+        [HttpPut(Name ="UpdateUser")]
         [EnableCors("AllowReactApp")]
         public IActionResult Update([FromBody] User user)
         {
@@ -102,7 +102,7 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        [HttpDelete("Delete/{id}")]
+        [HttpDelete("{id}", Name ="DeleteUser")]
         [EnableCors("AllowReactApp")]
         public IActionResult Delete(int id)
         {

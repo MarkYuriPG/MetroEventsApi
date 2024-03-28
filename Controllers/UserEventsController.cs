@@ -32,41 +32,9 @@ namespace MetroEventsApi.Controllers
             }
         }
 
-        //[HttpGet("{eventId}", Name = "GetUserbyEventId")]
-        //public IActionResult GetUsers(int id)
-        //{
-        //    var users = _context.UserEvents
-        //                        .Where(ue => ue.EventId == id)
-        //                        .Select(ue => ue.User)
-        //                        .ToList();
-
-        //    if (users == null || !users.Any())
-        //    {
-        //        return NotFound($"No users found for event with ID {id}");
-        //    }
-
-        //    return Ok(users);
-        //}
-
-        //[HttpGet("{userId}", Name = "GetEventsbyUserId")]
-        //public IActionResult GetEvents(int id)
-        //{
-        //    var events = _context.UserEvents
-        //                        .Where(ue => ue.UserId == id)
-        //                        .Select(ue => ue.Event)
-        //                        .ToList();
-
-        //    if (events == null || !events.Any())
-        //    {
-        //        return NotFound($"No users found for event with ID {id}");
-        //    }
-
-        //    return Ok(events);
-        //}
-
-        [HttpPost(Name = "CreateOrUpdateUserEvent")]
+        [HttpPost(Name = "CreateUserEvent")]
         [EnableCors("AllowReactApp")]
-        public IActionResult CreateOrUpdate(int eventId, int userId)
+        public IActionResult Create(int eventId, int userId)
         {
             // Check if the provided eventId and userId are valid
             var userExists = _context.Users.Any(u => u.UserId == userId);
@@ -97,6 +65,34 @@ namespace MetroEventsApi.Controllers
             _context.SaveChanges();
 
             return Ok(newUserEvent);
+        }
+
+        [HttpPut(Name ="UpdateUserEvent")]
+        [EnableCors("AllowReactApp")]
+        public IActionResult Update([FromBody] UserEvent userEvent)
+        {
+            if(userEvent == null)
+            {
+                return BadRequest();
+            }
+
+            var targetUserEvent = _context.UserEvents
+                .Where(ue => ue.UserId == userEvent.UserId && 
+                ue.EventId == userEvent.EventId)
+                .FirstOrDefault();
+
+            if(targetUserEvent == null)
+            {
+                _context.UserEvents.Add(userEvent);
+                _context.SaveChanges();
+                return Ok(userEvent);
+            }
+            else
+            {
+                targetUserEvent.Status = userEvent.Status;
+                _context.SaveChanges();
+                return Ok(targetUserEvent);
+            }
         }
 
 
