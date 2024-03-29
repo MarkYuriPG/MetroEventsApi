@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace MetroEventsApi.Controllers
 {
@@ -30,6 +31,22 @@ namespace MetroEventsApi.Controllers
             {
                 return NoContent();
             }
+        }
+
+        [HttpGet("GetUsersByEventId/{eventId}", Name = "GetUsersByEventId")]
+        public IActionResult GetUsers(int eventId)
+        {
+            var users = _context.UserEvents
+            .Where(ue => ue.EventId == eventId)
+            .Select(ue => ue.UserId)
+            .ToList();
+
+            if (users == null || users.Count == 0)
+            {
+                return NotFound("No users found for the provided event ID");
+            }
+
+            return Ok(users);
         }
 
         [HttpPost(Name = "CreateUserEvent")]

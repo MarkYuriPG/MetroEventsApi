@@ -3,6 +3,7 @@ using MetroEventsApi.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MetroEventsApi.Migrations
 {
     [DbContext(typeof(MetroEventsDbContext))]
-    partial class MetroEventsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240329033204_add-event-in-comments")]
+    partial class addeventincomments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -40,6 +43,8 @@ namespace MetroEventsApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("CommentId");
+
+                    b.HasIndex("EventId");
 
                     b.ToTable("Comments");
                 });
@@ -124,6 +129,22 @@ namespace MetroEventsApi.Migrations
                     b.HasKey("UserId", "EventId");
 
                     b.ToTable("UserEvents");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.Comment", b =>
+                {
+                    b.HasOne("MetroEventsApi.Models.Event", "Event")
+                        .WithMany("Comments")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
+                });
+
+            modelBuilder.Entity("MetroEventsApi.Models.Event", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
