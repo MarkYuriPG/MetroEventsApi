@@ -54,6 +54,24 @@ namespace MetroEventsApi.Controllers
             }
         }
 
+        [HttpGet("UserName/{userName}", Name = "GetUserByUserName")]
+        public IActionResult Get(string userName)
+        {
+            var targetUser = _context.Users
+                .Where(e => e.UserName == userName)
+                .FirstOrDefault();
+
+
+            if (targetUser != null)
+            {
+                return Ok(targetUser);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost(Name = "CreateUser")]
         [EnableCors("AllowReactApp")]
         public IActionResult Create([FromBody] User user)
